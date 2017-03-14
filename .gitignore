@@ -1,0 +1,8 @@
+*.o
+*.out
+*.a
+*.d
+*.ad
+*.so
+driver
+libsodium-*.*.*/
