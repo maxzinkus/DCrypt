@@ -3,6 +3,8 @@ DCrypt - Block Device Cryptography
 
 **Max Zinkus** - mzinkus@calpoly.edu
 
+See the code at `https://github.com/DeltaHeavy/DCrypt`
+
 Project Motivation and Background
 ---------------------------------
 
