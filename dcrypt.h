@@ -1,6 +1,4 @@
 /* Max Zinkus
- * CPE 323 Lab 4
- * Winter 2017
  * dcrypt.h
  */
 
@@ -18,11 +16,11 @@
 #define HEADERSIZE (SALSANONCESIZE + SALTSIZE + KEYSIZE + MACSIZE)
 #define ADSIZE (GCMNONCESIZE + TAGSIZE)
 
+#define MAX_SIZE 268435456       // max 256Mb disks : CHANGEME
 #define MAX_FILES INT8_MAX       // max 128 mounted disks
 #define MAX_FILENAME 256         // max path length
-#define MAX_SIZE 268435456       // max 256Mb files
 #define MAX_KEK 256
-#define KEKMSG "Input password (<256 characters): "
+#define KEKMSG "Input password (<256 characters):\n"
 #define KEKERR "Error collecting password.\n"
 #define KEKSHORT "Error: password too short.\n"
 
@@ -72,10 +70,16 @@ typedef struct {
 } disk_info;
 
 /* mount file-based disk */
-status_code mountDiskHelper(const char *file, const char *adfile, disk_label *id, mt_perm perm);
+status_code mountDiskHelper(const char *file,
+                            const char *adfile,
+                            disk_label *id,
+                            mt_perm perm);
 
 /* mount disk: set up data structures */
-status_code mountDisk(const int fd, const int adfd, disk_label *id, mt_perm perm);
+status_code mountDisk(const int fd,
+                      const int adfd,
+                      disk_label *id,
+                      mt_perm perm);
 
 /* unmount disk: free data structures, clean close */
 status_code unmountDisk(const disk_label id);

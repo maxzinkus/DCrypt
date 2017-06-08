@@ -1,6 +1,4 @@
 /* Max Zinkus
- * CPE 323 Lab 4
- * Winter 2017
  * dcrypt.c
  */
 
@@ -64,6 +62,7 @@ status_code mountDisk(const int fd,
       free((OPENED[spot])->crypt);
       free(OPENED[spot]);
       OPENED[spot] = NULL;
+      NUM_OPEN--;
       return status;
    }
  
@@ -79,6 +78,7 @@ status_code mountDisk(const int fd,
       free((OPENED[spot])->crypt);
       free(OPENED[spot]);
       OPENED[spot] = NULL;
+      NUM_OPEN--;
       return ESTAT;
    }
 
@@ -96,6 +96,7 @@ status_code mountDisk(const int fd,
          free((OPENED[spot])->crypt);
          free(OPENED[spot]);
          OPENED[spot] = NULL;
+         NUM_OPEN--;
          return status;
       }
    }
@@ -109,6 +110,7 @@ status_code mountDisk(const int fd,
          free((OPENED[spot])->crypt);
          free(OPENED[spot]);
          OPENED[spot] = NULL;
+         NUM_OPEN--;
          return ETRUNC;
       }
  
@@ -120,6 +122,7 @@ status_code mountDisk(const int fd,
       free((OPENED[spot])->crypt);
       free(OPENED[spot]);
       OPENED[spot] = NULL;
+      NUM_OPEN--;
       return ESTAT;
    }
 
@@ -214,6 +217,7 @@ status_code readBlock(const disk_label id,
    if (block >= (OPENED[id])->nblocks) {
       return ESIZE; // don't read past end
    }
+
    status_code status = seekDisk(id, block);
    if (status != SUCCESS) {
       return status;
@@ -223,13 +227,13 @@ status_code readBlock(const disk_label id,
    uint8_t nonce[GCMNONCESIZE] = {0}, tag[TAGSIZE] = {0};
    uint8_t *crypt, *plain;
 
-   crypt = calloc(BLOCKSIZE, 1);
-   if (!crypt) {
-      return EALLOC;
-   }
    plain = calloc(BLOCKSIZE, 1);
    if (!plain) {
-      free(crypt);
+      return EALLOC;
+   }
+   crypt = calloc(BLOCKSIZE, 1);
+   if (!crypt) {
+      free(plain);
       return EALLOC;
    }
 
@@ -371,6 +375,9 @@ status_code truncateDisk(const disk_label id,
                          const uint64_t size) {
    if (!OPENED[id]) {
       return ENOTMOUNTED;
+   }
+   if (size > MAX_SIZE) {
+      return ESIZE;
    }
    if (size % BLOCKSIZE) {
       return EMISALIGNED; // must remain aligned

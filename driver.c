@@ -1,11 +1,10 @@
 /* Max Zinkus
- * CPE 323 Lab 4
- * Winter 2017
  * driver.c
  */
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "dcrypt.h"
 
@@ -14,13 +13,18 @@ int main(int argc, char **argv) {
    status_code status;
    char b1[100] = {0}, b2[100] = {0};
 
-   char *fmt = "disk%d.d";
-   char *fmtt = "data%d.ad";
+   char *fmt = "disks/disk%d.d";
+   char *fmtt = "disks/data%d.ad";
 
-   for (int i = 0; i < MAX_FILES + 10; i++) {
+   for (int i = 0; i < MAX_FILES; i++) {
       snprintf(b1, 100, fmt, i);
       snprintf(b2, 100, fmtt, i);
-      status = createDisk(b1, b2, BLOCKSIZE);
+      if (access(b1, F_OK) != -1) {
+         status = SUCCESS;
+      }
+      else {
+         status = createDisk(b1, b2, BLOCKSIZE);
+      }
       if (status == SUCCESS) {
          status = mountDiskHelper(b1, b2, id+i, PERM_READ);
          check(status);
