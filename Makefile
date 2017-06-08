@@ -1,12 +1,12 @@
-CFLAGS=-Wall -Werror -Wpedantic -std=c99
+CFLAGS=-Wall -Werror -Wpedantic -Wshadow -std=c99
 
 driver: driver.c libdcrypt.a
-	gcc -g -std=c99 -lsodium -L. -ldcrypt -o driver driver.c
+	gcc -g -std=c99 -lsodium -L. -ldcrypt -o $@ $<
 
 libdcrypt.a: dcrypt.c dcrypt.h
-	gcc -g $(CFLAGS) -fPIC -shared -o libdcrypt.a dcrypt.c
+	gcc -flto $(CFLAGS) -O3 -Os -fPIC -shared -o $@ $<
 
 clean:
-	rm driver libdcrypt.a
+	$(RM) driver libdcrypt.a
 wipe:
-	rm *.d *.ad
+	$(RM) disks/*.d disks/*.ad
