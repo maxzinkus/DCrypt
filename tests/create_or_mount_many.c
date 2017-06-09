@@ -1,12 +1,8 @@
-/* Max Zinkus
- * driver.c
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "dcrypt.h"
+#include "../dcrypt.h"
 
 int main(int argc, char **argv) {
    disk_label id[MAX_FILES] = {0};
@@ -26,7 +22,7 @@ int main(int argc, char **argv) {
          status = createDisk(b1, b2, BLOCKSIZE);
       }
       if (status == SUCCESS) {
-         status = mountDiskHelper(b1, b2, id+i, PERM_READ);
+         status = mountDiskHelper(b1, b2, id+i, PERM_READ, false);
          check(status);
       }
       else {
