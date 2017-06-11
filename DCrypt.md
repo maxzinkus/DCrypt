@@ -1,22 +1,12 @@
-DCrypt - Block Device Cryptography
-==================================
+Final Project: DCrypt - Block Device Cryptography
+=================================================
 
 **Max Zinkus** - mzinkus@calpoly.edu
-
-See the code at `https://github.com/DeltaHeavy/DCrypt`
 
 Project Motivation and Background
 ---------------------------------
 
-Initially, I wanted to implement work attacking nonce reuse on GCM, but I
-became very much interested in lab 4 and expanded the work out into a full
-C implementation of the following program. I ran nonce-reuse attacks against
-the GCM use within my implementation, and validated that the generation,
-incrementation, and authentication of nonces used in my code does in fact
-avoid nonce reuse up to a very large number of block encryptions, after which
-the recommendation is to change the data encryption key.
-
-My motivation into delving further into this particular project was twofold,
+My motivation into delving into this particular project was twofold,
 first, that the current implementations for block device encryption lack
 cryptographic guarantees about integrity, namely AES in XTS mode, which simply
 makes integrity violations very likely to cause decryptions to come out
@@ -29,6 +19,26 @@ isolation for security are becoming more popular and more usable. The specific
 example which comes to mind is Qubes OS, which runs under the Xen hypervisor
 and utilizes Intel VT-d to isolate the PCI subsystem, which could protect the
 header USB from unauthorized writes as described in the requirements below.
+
+Parallelization and Performance
+-------------------------------
+
+There are two major bottlenecks in systems which abstract block device IO,
+especially when a disk is involved. One is that reads and writes to the device
+can be extremely slow and therefore must be done only when strictly necessary
+and when the device is otherwise idle. As such, a caching system layered on
+top of the reads and writes to the disk provides a major benefit to the
+overall performance of the system.
+
+The other bottleneck is an extremely important and very slow operation which
+only has to be done rarely, and can be allowed to take a global lock on the
+device: wiping the disk. Wiping the disk must be secure (multiple passes are
+critical, I implement the U.S. Department of Defense and Department of Energy
+secure disk wipe standards) and requires writing to the entire disk, which is
+enormously slow. However, the data on the disk is not read during a wipe, and
+the wipe of each block is not linearly dependent on any other, and so the
+task is ripe for parallelization. I've utilized the **PThreads** library in
+the process of distributing the work of wiping the disk.
 
 Construction Summary and Requirements
 -------------------------------------

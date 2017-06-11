@@ -6,3 +6,4 @@
 *.so
 driver
 libsodium-*.*.*/
+*.pdf
