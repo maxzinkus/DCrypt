@@ -12,43 +12,45 @@
 #define GCMNONCESIZE 12
 #define SALSANONCESIZE 24
 #define SALTSIZE crypto_pwhash_scryptsalsa208sha256_SALTBYTES
-// size of whole AD header
+/* size of whole AD header */
 #define HEADERSIZE (SALSANONCESIZE + SALTSIZE + KEYSIZE + MACSIZE)
+/* size of each AD within the AD header */
 #define ADSIZE (GCMNONCESIZE + TAGSIZE)
 
-#define MAX_SIZE 268435456       // max 256Mb disks : CHANGEME
-#define MAX_FILES INT8_MAX       // max 128 mounted disks
-#define MAX_FILENAME 256         // max path length
+#define MAX_SIZE 268435456       /* max 256Mb disks : CHANGEME       */
+#define MAX_FILES INT8_MAX       /* max 128 mounted disks : CHANGEME */
+#define MAX_FILENAME 256         /* max path length                  */
 #define MAX_KEK 256
 #define KEKMSG "Input password (<256 characters):\n"
 #define KEKERR "Error collecting password.\n"
 #define KEKSHORT "Error: password too short.\n"
 
-#define ECRYPT (1<<17)      // cryptographic failure
-#define EACCESS (1<<16)     // access denied to file or access failed
-#define EEXISTS (1<<15)     // file exists, cowardly not overwriting
-#define ESTAT (1<<14)       // stat failed
-#define ETRUNC (1<<13)      // truncate failed 
-#define EALLOC (1<<12)      // malloc failed
-#define EREAD (1<<11)       // read failed
-#define EWRITE (1<<10)      // write failed
-#define ESEEK (1<<9)        // seek failed
-#define EUNLINK (1<<8)      // unlink failed
-#define EOPEN (1<<7)        // open failed
-#define ECLOSE (1<<6)       // close failed
-#define EDENY (1<<5)        // operation requested violates mount permissions
-#define ESIZE (1<<4)        // trying to read/write past end of device
-#define EMODE (1<<3)        // bad mode of operation given to a function
-#define ELIMIT (1<<2)       // no more space in OPENED table
-#define EMISALIGNED (1<<1)  // given size not block-aligned
-#define ENOTMOUNTED (1<<0)  // given disk is not mounted
-#define SUCCESS 0
+typedef enum {
+   SUCCESS,
+   ENOTMOUNTED,
+   EMISALIGNED,
+   ELIMIT,
+   EMODE,
+   ESIZE,
+   EDENY,
+   ECLOSE,
+   EOPEN,
+   EUNLINK,
+   ESEEK,
+   EWRITE,
+   EREAD,
+   EALLOC,
+   ETRUNC,
+   ESTAT,
+   EEXISTS,
+   EACCESS,
+   ECRYPT,
+} status_code;
 
 #define PERM_READ 0x0f
 #define PERM_WRITE 0xf0
 
 typedef int8_t disk_label;
-typedef int32_t status_code;
 typedef uint8_t mt_perm;
 
 typedef enum {WIPE_FAST, WIPE_DOE_SECURE, WIPE_DOD_SECURE} wipe_mode;

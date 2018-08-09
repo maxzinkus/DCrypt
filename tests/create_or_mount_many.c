@@ -23,11 +23,8 @@ int main(int argc, char **argv) {
       }
       if (status == SUCCESS) {
          status = mountDiskHelper(b1, b2, id+i, PERM_READ, false);
-         check(status);
       }
-      else {
-         check(status);
-      }
+      check(status);
    }
 
    for (int i = 0; i < MAX_FILES; i++) {

@@ -1,12 +1,11 @@
-CFLAGS=-Wall -Werror -Wpedantic -Wshadow -std=c99
+CC=clang
+CFLAGS=-Wall -Werror -Wpedantic -Wshadow -std=gnu11 -flto -O3
 
 %.o: %.c libdcrypt.a
-	gcc -g -std=c99 -lsodium -L. -ldcrypt -o $@ $<
+	$(CC) $(CFLAGS) -std=c11 -lsodium -L. -ldcrypt -o $@ $<
 
 libdcrypt.a: dcrypt.c dcrypt.h
-	gcc -flto $(CFLAGS) -O3 -Os -fPIC -shared -o $@ $<
-
-
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $<
 
 clean:
 	$(RM) driver libdcrypt.a

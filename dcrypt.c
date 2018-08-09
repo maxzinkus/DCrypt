@@ -2,8 +2,6 @@
  * dcrypt.c
  */
 
-#define _XOPEN_SOURCE 700
-
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -15,7 +13,7 @@
 
 #include "dcrypt.h"
 
-#define ABS(x) ((x) < 0) ? (-(x)) : (x)
+#define ABS(x) (((x) < 0) ? (-(x)) : (x))
 
 static int8_t CRYPT_INIT = 0;
 static int8_t NUM_OPEN = 0;
@@ -800,58 +798,62 @@ status_code unmountDiskCryptFinalize(const disk_label id) {
 }
 
 void check(status_code status) {
-   if (status & ECRYPT) {
-      fprintf(stderr, "integrity failure or cryptography error\n");
-   }
-   if (status & EACCESS) {
-      fprintf(stderr, "access denied or access error\n");
-   }
-   if (status & EEXISTS) {
-      fprintf(stderr, "file exists, refusing to overwrite\n");
-   }
-   if (status & ESTAT) {
-      fprintf(stderr, "stat error\n");
-   }
-   if (status & ETRUNC) {
-      fprintf(stderr, "truncate error\n");
-   }
-   if (status & EALLOC) {
-      fprintf(stderr, "allocation error\n"); 
-   }
-   if (status & EREAD) {
-      fprintf(stderr, "read error\n"); 
-   }
-   if (status & EWRITE) {
-      fprintf(stderr, "write error\n"); 
-   }
-   if (status & ESEEK) {
-      fprintf(stderr, "seek error\n"); 
-   }
-   if (status & EUNLINK) {
-      fprintf(stderr, "unlink error\n"); 
-   }
-   if (status & EOPEN) {
-      fprintf(stderr, "open error\n"); 
-   }
-   if (status & ECLOSE) {
-      fprintf(stderr, "close error\n"); 
-   }
-   if (status & EDENY) {
-      fprintf(stderr, "permission denied\n"); 
-   }
-   if (status & ESIZE) {
-      fprintf(stderr, "access past end of device\n"); 
-   }
-   if (status & EMODE) {
-      fprintf(stderr, "bad mode given\n"); 
-   }
-   if (status & ELIMIT) {
-      fprintf(stderr, "reached limit of open disks\n"); 
-   }
-   if (status & EMISALIGNED) {
-      fprintf(stderr, "value not blocksize-aligned\n"); 
-   }
-   if (status & ENOTMOUNTED) {
-      fprintf(stderr, "disk is not mounted\n"); 
+   switch (status) {
+      case ECRYPT:
+         fprintf(stderr, "integrity failure or cryptography error\n");
+         break;
+      case EACCESS:
+         fprintf(stderr, "access denied or access error\n");
+         break;
+      case EEXISTS:
+         fprintf(stderr, "file exists, refusing to overwrite\n");
+         break;
+      case ESTAT:
+         fprintf(stderr, "stat error\n");
+         break;
+      case ETRUNC:
+         fprintf(stderr, "truncate error\n");
+         break;
+      case EALLOC:
+         fprintf(stderr, "allocation error\n"); 
+         break;
+      case EREAD:
+         fprintf(stderr, "read error\n"); 
+         break;
+      case EWRITE:
+         fprintf(stderr, "write error\n"); 
+         break;
+      case ESEEK:
+         fprintf(stderr, "seek error\n"); 
+         break;
+      case EUNLINK:
+         fprintf(stderr, "unlink error\n"); 
+         break;
+      case EOPEN:
+         fprintf(stderr, "open error\n"); 
+         break;
+      case ECLOSE:
+         fprintf(stderr, "close error\n"); 
+         break;
+      case EDENY:
+         fprintf(stderr, "permission denied\n"); 
+         break;
+      case ESIZE:
+         fprintf(stderr, "access past end of device\n"); 
+         break;
+      case EMODE:
+         fprintf(stderr, "bad mode given\n"); 
+         break;
+      case ELIMIT:
+         fprintf(stderr, "reached limit of open disks\n"); 
+         break;
+      case EMISALIGNED:
+         fprintf(stderr, "value not blocksize-aligned\n"); 
+         break;
+      case ENOTMOUNTED:
+         fprintf(stderr, "disk is not mounted\n"); 
+         break;
+      default:
+         break;
    }
 }
